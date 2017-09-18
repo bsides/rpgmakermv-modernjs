@@ -7,7 +7,7 @@
 * @param {Number} width The width of the bitmap
 * @param {Number} height The height of the bitmap
 */
-export default function Bitmap() {
+export function Bitmap() {
   this.initialize.apply(this, arguments)
 }
 
