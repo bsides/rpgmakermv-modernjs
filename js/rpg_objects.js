@@ -1,5 +1,5 @@
 //=============================================================================
-// rpg_objects.js v1.5.1 - Yanfly Desktop Optimized Version Update
+// rpg_objects.js v1.5.1
 //=============================================================================
 
 //-----------------------------------------------------------------------------
@@ -272,7 +272,7 @@ Game_System.prototype.replayWalkingBgm = function() {
 };
 
 Game_System.prototype.saveWalkingBgm2 = function() {
-  this._walkingBgm = $dataMap.bgm;
+	this._walkingBgm = $dataMap.bgm;
 };
 
 //-----------------------------------------------------------------------------
@@ -504,9 +504,7 @@ Game_Message.prototype.newPage = function() {
 };
 
 Game_Message.prototype.allText = function() {
-    return this._texts.reduce(function(previousValue, currentValue) {
-        return previousValue + '\n' + currentValue;
-    });
+    return this._texts.join('\n');
 };
 
 //-----------------------------------------------------------------------------
@@ -3278,8 +3276,10 @@ Game_Battler.prototype.onAllActionsEnd = function() {
 Game_Battler.prototype.onTurnEnd = function() {
     this.clearResult();
     this.regenerateAll();
-    this.updateStateTurns();
-    this.updateBuffTurns();
+    if (!BattleManager.isForcedTurn()) {
+        this.updateStateTurns();
+        this.updateBuffTurns();
+    }
     this.removeStatesAuto(2);
 };
 
@@ -7310,7 +7310,6 @@ Game_Character.prototype.findDirectionTo = function(goalX, goalY) {
 
         if (current.x === goalX && current.y === goalY) {
             best = current;
-            goaled = true;
             break;
         }
 
@@ -8803,6 +8802,7 @@ Game_Interpreter.prototype.setup = function(list, eventId) {
     this._mapId = $gameMap.mapId();
     this._eventId = eventId || 0;
     this._list = list;
+    Game_Interpreter.requestImages(list);
 };
 
 Game_Interpreter.prototype.eventId = function() {
@@ -10055,11 +10055,19 @@ Game_Interpreter.prototype.command281 = function() {
 // Change Tileset
 Game_Interpreter.prototype.command282 = function() {
     var tileset = $dataTilesets[this._params[0]];
-    for (var i = 0; i < tileset.tilesetNames.length; i++) {
-        ImageManager.loadTileset(tileset.tilesetNames[i]);
+    if(!this._imageReservationId){
+        this._imageReservationId = Utils.generateRuntimeId();
     }
-    if (ImageManager.isReady()) {
+
+    var allReady = tileset.tilesetNames.map(function(tilesetName) {
+        return ImageManager.reserveTileset(tilesetName, 0, this._imageReservationId);
+    }, this).every(function(bitmap) {return bitmap.isReady();});
+
+    if (allReady) {
         $gameMap.changeTileset(this._params[0]);
+        ImageManager.releaseReservation(this._imageReservationId);
+        this._imageReservationId = null;
+
         return true;
     } else {
         return false;

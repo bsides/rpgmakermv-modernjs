@@ -1,12 +1,32 @@
 {
-  "name": "ModernJS",
+  "name": "rpgmakermv-modernjs",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "description": "RPG Maker MV refactor to modern JavaScript ES6+",
+  "main": "index.html",
+  "watch": {
+    "build": "js/core/*.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watchpack": "webpack --progress --watch",
+    "startpack": "webpack-dev-server --open",
+    "buildpack": "webpack",
+    "babel": "babel src --out-dir build --watch --source-maps"
+  },
+  "keywords": [
+    "rpg maker mv",
+    "rpg maker",
+    "rpgmaker",
+    "refactor",
+    "rmmv"
+  ],
+  "author": "Rafael BSIDES Pereira <rafaelbsides@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-transform-es2015-modules-umd": "^6.24.1",
+    "babel-preset-env": "^1.6.0"
+  }
 }

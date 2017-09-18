@@ -1,5 +1,5 @@
 //=============================================================================
-// rpg_managers.js v1.5.1 - Yanfly Desktop Optimized Version Update
+// rpg_managers.js v1.5.1
 //=============================================================================
 
 //-----------------------------------------------------------------------------
@@ -86,7 +86,7 @@ DataManager.loadDataFile = function(name, src) {
             DataManager.onLoad(window[name]);
         }
     };
-    xhr.onerror = function() {
+    xhr.onerror = this._mapLoader || function() {
         DataManager._errorUrl = DataManager._errorUrl || url;
     };
     window[name] = null;
@@ -106,8 +106,7 @@ DataManager.isDatabaseLoaded = function() {
 DataManager.loadMapData = function(mapId) {
     if (mapId > 0) {
         var filename = 'Map%1.json'.format(mapId.padZero(3));
-        this._mapLoader = ResourceHandler.createLoader('data/' + filename,
-          this.loadDataFile.bind(this, '$dataMap', filename));
+        this._mapLoader = ResourceHandler.createLoader('data/' + filename, this.loadDataFile.bind(this, '$dataMap', filename));
         this.loadDataFile('$dataMap', filename);
     } else {
         this.makeEmptyMap();
@@ -321,12 +320,12 @@ DataManager.loadAllSavefileImages = function() {
 DataManager.loadSavefileImages = function(info) {
     if (info.characters) {
         for (var i = 0; i < info.characters.length; i++) {
-            ImageManager.loadCharacter(info.characters[i][0]);
+            ImageManager.reserveCharacter(info.characters[i][0]);
         }
     }
     if (info.faces) {
         for (var j = 0; j < info.faces.length; j++) {
-            ImageManager.loadFace(info.faces[j][0]);
+            ImageManager.reserveFace(info.faces[j][0]);
         }
     }
 };
@@ -869,42 +868,38 @@ ImageManager.loadBitmap = function(folder, filename, hue, smooth) {
 };
 
 ImageManager.loadEmptyBitmap = function() {
-    var empty = this.cache.getItem('empty');
-    if (!empty) {
+    var empty = this._imageCache.get('empty');
+    if(!empty){
         empty = new Bitmap();
-        this.cache.setItem('empty', empty);
+        this._imageCache.add('empty', empty);
+        this._imageCache.reserve('empty', empty, this._systemReservationId);
     }
+
     return empty;
 };
 
 ImageManager.loadNormalBitmap = function(path, hue) {
-    var key = path + ':' + hue;
-    var bitmap = this.cache.getItem(key);
+    var key = this._generateCacheKey(path, hue);
+    var bitmap = this._imageCache.get(key);
     if (!bitmap) {
         bitmap = Bitmap.load(path);
         bitmap.addLoadListener(function() {
             bitmap.rotateHue(hue);
         });
-        this.cache.setItem(key, bitmap);
+        this._imageCache.add(key, bitmap);
+    }else if(!bitmap.isReady()){
+        bitmap.decode();
     }
+
     return bitmap;
 };
 
 ImageManager.clear = function() {
-    this.cache.clear();
+    this._imageCache = new ImageCache();
 };
 
 ImageManager.isReady = function() {
-    for (var key in this.cache._inner) {
-        var bitmap = this.cache._inner[key].item;
-        if (bitmap.isError()) {
-            throw new Error('Failed to load: ' + bitmap.url);
-        }
-        if (!bitmap.isReady()) {
-            return false;
-        }
-    }
-    return true;
+    return this._imageCache.isReady();
 };
 
 ImageManager.isObjectCharacter = function(filename) {
@@ -920,6 +915,7 @@ ImageManager.isBigCharacter = function(filename) {
 ImageManager.isZeroParallax = function(filename) {
     return filename.charAt(0) === '!';
 };
+
 
 ImageManager.reserveAnimation = function(filename, hue, reservationId) {
     return this.reserveBitmap('img/animations/', filename, hue, true, reservationId);
@@ -1778,10 +1774,10 @@ function SceneManager() {
 }
 
 /*
- * Gets the current time in ms.
+ * Gets the current time in ms without on iOS Safari.
  * @private
  */
-SceneManager._getTimeInMs = function() {
+SceneManager._getTimeInMsWithoutMobileSafari = function() {
     return performance.now();
 };
 
@@ -1798,7 +1794,7 @@ SceneManager._screenHeight      = 624;
 SceneManager._boxWidth          = 816;
 SceneManager._boxHeight         = 624;
 SceneManager._deltaTime = 1.0 / 60.0;
-SceneManager._currentTime = SceneManager._getTimeInMs();
+if (!Utils.isMobileSafari()) SceneManager._currentTime = SceneManager._getTimeInMsWithoutMobileSafari();
 SceneManager._accumulator = 0.0;
 
 SceneManager.run = function(sceneClass) {
@@ -1840,8 +1836,6 @@ SceneManager.preferableRendererType = function() {
         return 'canvas';
     } else if (Utils.isOptionValid('webgl')) {
         return 'webgl';
-    } else if (this.shouldUseCanvasRenderer()) {
-        return 'canvas';
     } else {
         return 'auto';
     }
@@ -1909,6 +1903,7 @@ SceneManager.update = function() {
         if (Utils.isMobileSafari()) {
             this.updateInputData();
         }
+        this.updateManagers();
         this.updateMain();
         this.tickEnd();
     } catch (e) {
@@ -1977,7 +1972,7 @@ SceneManager.updateMain = function() {
         this.changeScene();
         this.updateScene();
     } else {
-        var newTime = this._getTimeInMs();
+        var newTime = this._getTimeInMsWithoutMobileSafari();
         var fTime = (newTime - this._currentTime) / 1000;
         if (fTime > 0.25) fTime = 0.25;
         this._currentTime = newTime;
@@ -1993,18 +1988,20 @@ SceneManager.updateMain = function() {
     this.requestUpdate();
 };
 
-SceneManager.updateManagers = function(ticks, delta) {
-    ImageManager.cache.update(ticks, delta);
+SceneManager.updateManagers = function() {
+    ImageManager.update();
 };
 
 SceneManager.changeScene = function() {
     if (this.isSceneChanging() && !this.isCurrentSceneBusy()) {
         if (this._scene) {
             this._scene.terminate();
+            this._scene.detachReservation();
             this._previousClass = this._scene.constructor;
         }
         this._scene = this._nextScene;
         if (this._scene) {
+            this._scene.attachReservation();
             this._scene.create();
             this._nextScene = null;
             this._sceneStarted = false;
@@ -2119,6 +2116,15 @@ SceneManager.snapForBackground = function() {
 
 SceneManager.backgroundBitmap = function() {
     return this._backgroundBitmap;
+};
+
+SceneManager.resume = function() {
+    this._stopped = false;
+    this.requestUpdate();
+    if (!Utils.isMobileSafari()) {
+        this._currentTime = this._getTimeInMsWithoutMobileSafari();
+        this._accumulator = 0;
+    }
 };
 
 //-----------------------------------------------------------------------------
