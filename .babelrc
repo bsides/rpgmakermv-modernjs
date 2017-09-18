@@ -10,5 +10,9 @@
       }
     ]
   ],
-  "plugins": ["babel-plugin-add-module-exports", "transform-class-properties"]
+  "plugins": [
+    "babel-plugin-add-module-exports",
+    "transform-class-properties",
+    "transform-object-rest-spread"
+  ]
 }
