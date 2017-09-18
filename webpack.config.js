@@ -1,29 +1,10 @@
 /* global __dirname, require, module*/
 
 const webpack = require('webpack')
-// const UglifyJsPlugin = webpack.optimize.UglifyJsPlugin
 const path = require('path')
-const env = require('yargs').argv.env // use --env with webpack 2
 const entry = require('webpack-glob-entry')
 
-let libraryName = 'Library'
-
-let plugins = [],
-  outputFile,
-  fullPath
-
-if (env === 'build') {
-  // plugins.push(new UglifyJsPlugin({ minimize: true }))
-  outputFile = libraryName + '.min.js'
-} else {
-  outputFile = libraryName + '.js'
-}
-
-plugins.push(
-  // Add module names to factory functions so they appear in browser profiler.
-  new webpack.NamedModulesPlugin()
-)
-srcPath = __dirname + '/src'
+let srcPath = __dirname + '/src'
 
 const config = {
   entry: entry(srcPath + '/core/*.js'),
@@ -70,7 +51,7 @@ const config = {
   externals: {
     'nw.gui': ''
   },
-  plugins: plugins
+  plugins: [new webpack.NamedModulesPlugin()]
 }
 
 module.exports = config
