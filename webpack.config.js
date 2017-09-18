@@ -8,7 +8,7 @@ const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 let srcPath = __dirname + '/src'
 
 const config = {
-  entry: entry(srcPath + '/core/*.js'),
+  entry: entry(srcPath + '/**/*.js'),
   devtool: 'cheap-source-map',
   output: {
     path: __dirname + '/build',
