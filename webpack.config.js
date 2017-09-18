@@ -3,6 +3,7 @@
 const webpack = require('webpack')
 const path = require('path')
 const entry = require('webpack-glob-entry')
+const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 
 let srcPath = __dirname + '/src'
 
@@ -51,7 +52,7 @@ const config = {
   externals: {
     'nw.gui': ''
   },
-  plugins: [new webpack.NamedModulesPlugin()]
+  plugins: [new webpack.NamedModulesPlugin(), new CaseSensitivePathsPlugin()]
 }
 
 module.exports = config

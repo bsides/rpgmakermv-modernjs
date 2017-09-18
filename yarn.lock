@@ -445,6 +445,10 @@ babel-plugin-syntax-async-functions@^6.8.0:
   version "6.13.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-syntax-async-functions/-/babel-plugin-syntax-async-functions-6.13.0.tgz#cad9cad1191b5ad634bf30ae0872391e0647be95"
 
+babel-plugin-syntax-class-properties@^6.8.0:
+  version "6.13.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-syntax-class-properties/-/babel-plugin-syntax-class-properties-6.13.0.tgz#d7eb23b79a317f8543962c505b827c7d6cac27de"
+
 babel-plugin-syntax-exponentiation-operator@^6.8.0:
   version "6.13.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-syntax-exponentiation-operator/-/babel-plugin-syntax-exponentiation-operator-6.13.0.tgz#9ee7e8337290da95288201a6a57f4170317830de"
@@ -460,6 +464,15 @@ babel-plugin-transform-async-to-generator@^6.22.0:
     babel-helper-remap-async-to-generator "^6.24.1"
     babel-plugin-syntax-async-functions "^6.8.0"
     babel-runtime "^6.22.0"
+
+babel-plugin-transform-class-properties@^6.24.1:
+  version "6.24.1"
+  resolved "https://registry.yarnpkg.com/babel-plugin-transform-class-properties/-/babel-plugin-transform-class-properties-6.24.1.tgz#6a79763ea61d33d36f37b611aa9def81a81b46ac"
+  dependencies:
+    babel-helper-function-name "^6.24.1"
+    babel-plugin-syntax-class-properties "^6.8.0"
+    babel-runtime "^6.22.0"
+    babel-template "^6.24.1"
 
 babel-plugin-transform-es2015-arrow-functions@^6.22.0:
   version "6.22.0"
@@ -997,6 +1010,10 @@ camelcase@^4.1.0:
 caniuse-lite@^1.0.30000718:
   version "1.0.30000732"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30000732.tgz#7cf9ca565f4d31a4b3dfa6e26b72ec22e9027da1"
+
+case-sensitive-paths-webpack-plugin@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/case-sensitive-paths-webpack-plugin/-/case-sensitive-paths-webpack-plugin-2.1.1.tgz#3d29ced8c1f124bf6f53846fb3f5894731fdc909"
 
 caseless@~0.12.0:
   version "0.12.0"
