@@ -1,4 +1,14 @@
 {
-  "presets": ["env"],
-  "plugins": ["babel-plugin-add-module-exports"]
+  "presets": [
+    [
+      "env",
+      {
+        "targets": {
+          "node": "current"
+        },
+        "modules": false
+      }
+    ]
+  ],
+  "plugins": ["babel-plugin-add-module-exports", "transform-class-properties"]
 }
