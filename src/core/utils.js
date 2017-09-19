@@ -100,7 +100,7 @@ class Utils {
   * @return {Boolean} True if the browser is Android Chrome
   */
   static isAndroidChrome() {
-    var agent = navigator.userAgent
+    const agent = navigator.userAgent
     return !!(agent.match(/Android/) && agent.match(/Chrome/))
   }
 
@@ -143,7 +143,7 @@ class Utils {
   }
 
   _id = 1
-  static generateRuntimeId = () => {
+  static generateRuntimeId() {
     return this._id++
   }
 
@@ -155,7 +155,7 @@ class Utils {
   * @method isSupportPassiveEvent
   * @return {Boolean} this browser support passive event or not
   */
-  static isSupportPassiveEvent = () => {
+  static isSupportPassiveEvent() {
     if (typeof this._supportPassiveEvent === 'boolean') {
       return this._supportPassiveEvent
     }
