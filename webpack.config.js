@@ -8,7 +8,10 @@ const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 let srcPath = __dirname + '/src'
 
 const config = {
-  entry: entry(srcPath + '/**/*.js'),
+  entry: {
+    rpg_core: srcPath + '/rpg_core.js',
+    rpg_windows: srcPath + '/rpg_windows.js'
+  },
   devtool: 'cheap-source-map',
   output: {
     path: __dirname + '/build',

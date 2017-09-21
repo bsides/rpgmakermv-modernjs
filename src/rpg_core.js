@@ -1,20 +1,20 @@
-import { Bitmap } from './core/bitmap'
-import { Utils } from './core/utils'
+import { Bitmap } from './core/Bitmap'
+import { Utils, JsExtensions } from './core/Utils'
 import { CacheEntry, CacheMap, ImageCache, RequestQueue } from './core/cache'
 import './core/native'
 import { Point, Rectangle } from './core/pixi'
-import { Graphics } from './core/graphics'
-import { Input } from './core/input'
-import { TouchInput } from './core/touchInput'
-import { Sprite } from './core/sprite'
-import { TilingSprite } from './core/tilingSprite'
+import { Graphics } from './core/Graphics'
+import { Input } from './core/Input'
+import { TouchInput } from './core/TouchInput'
+import { Sprite } from './core/Sprite'
+import { TilingSprite } from './core/TilingSprite'
 import { Tilemap, ShaderTilemap } from './core/tilemap'
-import { ScreenSprite } from './core/screenSprite'
-import { Window } from './core/window'
-import { WindowLayer } from './core/windowLayer'
-import { Weather } from './core/weather'
+import { ScreenSprite } from './core/ScreenSprite'
+import { Window } from './core/Window'
+import { WindowLayer } from './core/WindowLayer'
+import { Weather } from './core/Weather'
 import { ToneFilter, ToneSprite } from './core/tone'
-import { Stage } from './core/stage'
+import { Stage } from './core/Stage'
 import { WebAudio, Html5Audio } from './core/audio'
 import { JsonEx, Decrypter, ResourceHandler } from './core/misc'
 
@@ -25,6 +25,7 @@ import { JsonEx, Decrypter, ResourceHandler } from './core/misc'
 window.Bitmap = Bitmap
 
 window.Utils = Utils
+window.JsExtensions = JsExtensions
 
 window.CacheEntry = CacheEntry
 window.CacheMap = CacheMap
