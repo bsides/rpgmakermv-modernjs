@@ -14,6 +14,13 @@ import { Window } from './core/window'
 import { WindowLayer } from './core/windowLayer'
 import { Weather } from './core/weather'
 import { ToneFilter, ToneSprite } from './core/tone'
+import { Stage } from './core/stage'
+import { WebAudio, Html5Audio } from './core/audio'
+import { JsonEx, Decrypter, ResourceHandler } from './core/misc'
+
+//=============================================================================
+// rpg_core.js v1.5.1
+//=============================================================================
 
 window.Bitmap = Bitmap
 
@@ -49,3 +56,12 @@ window.Weather = Weather
 
 window.ToneFilter = ToneFilter
 window.ToneSprite = ToneSprite
+
+window.Stage = Stage
+
+window.WebAudio = WebAudio
+window.Html5Audio = Html5Audio
+
+window.JsonEx = JsonEx
+window.Decrypter = Decrypter
+window.ResourceHandler = ResourceHandler
