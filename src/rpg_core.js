@@ -12,6 +12,8 @@ import { Tilemap, ShaderTilemap } from './core/tilemap'
 import { ScreenSprite } from './core/screenSprite'
 import { Window } from './core/window'
 import { WindowLayer } from './core/windowLayer'
+import { Weather } from './core/weather'
+import { ToneFilter, ToneSprite } from './core/tone'
 
 window.Bitmap = Bitmap
 
@@ -42,3 +44,8 @@ window.ScreenSprite = ScreenSprite
 window.Window = Window
 
 window.WindowLayer = WindowLayer
+
+window.Weather = Weather
+
+window.ToneFilter = ToneFilter
+window.ToneSprite = ToneSprite

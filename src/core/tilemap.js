@@ -453,11 +453,11 @@ class Tilemap extends PIXI.Container {
   * @private
   */
   _writeLastTiles(i, x, y, tiles) {
-    const array1 = this._lastTiles[i]
+    let array1 = this._lastTiles[i]
     if (!array1) {
       array1 = this._lastTiles[i] = []
     }
-    const array2 = array1[y]
+    let array2 = array1[y]
     if (!array2) {
       array2 = array1[y] = []
     }
@@ -1027,8 +1027,7 @@ class ShaderTilemap extends Tilemap {
   * @private
   */
   _hackRenderer(renderer) {
-    const af = this.animationFrame % 4
-    if (af == 3) af = 1
+    const af = this.animationFrame % 4 == 3 ? 1 : this.animationFrame % 4
     renderer.plugins.tilemap.tileAnim[0] = af * this._tileWidth
     renderer.plugins.tilemap.tileAnim[1] =
       (this.animationFrame % 3) * this._tileHeight
