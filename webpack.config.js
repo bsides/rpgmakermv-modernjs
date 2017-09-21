@@ -27,7 +27,23 @@ const config = {
         loader: 'babel-loader',
         exclude: /(node_modules|bower_components)/,
         options: {
-          cacheDirectory: false
+          presets: [
+            [
+              'env',
+              {
+                targets: {
+                  browser: 'current'
+                },
+                modules: false
+              }
+            ]
+          ],
+          cacheDirectory: true,
+          plugins: [
+            'babel-plugin-add-module-exports',
+            'transform-class-properties',
+            'transform-object-rest-spread'
+          ]
         }
       }
     ]
